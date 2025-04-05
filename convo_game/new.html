@@ -56,8 +56,9 @@
       background-color: #2a4d1d;
       transform-origin: top center;
       z-index: 5;
+      animation: sway 10s ease-in-out infinite alternate;
     }
-    
+
     .vine::before, .vine::after {
       content: "";
       position: absolute;
@@ -67,8 +68,67 @@
       border-radius: 50% 50% 0 50%;
       transform: rotate(45deg);
       opacity: 0.8;
+      transition: all 0.5s;
     }
-    
+
+    .vine::before {
+      left: -5px;
+      top: 30%;
+    }
+
+    .vine::after {
+      left: 0;
+      top: 60%;
+    }
+
+    .vine:hover::before, .vine:hover::after {
+      background-color: #4a8a3a;
+      transform: rotate(60deg) scale(1.2);
+    }
+
+    @keyframes sway {
+      0% { transform: rotate(-2deg); }
+      100% { transform: rotate(2deg); }
+    }
+
+    /* Sky background */
+    #sky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 40vh;
+      background: linear-gradient(to bottom, #000000, #111122);
+      z-index: 1;
+      overflow: hidden;
+      transition: height 0.5s ease-out;
+    }
+
+    /* Moon in the sky */
+    #moon {
+      position: absolute;
+      width: 15vh;
+      height: 15vh;
+      background-color: #FFFDE7;
+      border-radius: 50%;
+      top: 10vh;
+      left: 20vw;
+      box-shadow: 0 0 20px rgba(255, 253, 231, 0.8);
+      z-index: 2;
+    }
+
+    #moon::before {
+      content: "";
+      position: absolute;
+      width: 13vh;
+      height: 13vh;
+      background-color: #111122;
+      border-radius: 50%;
+      top: -2vh;
+      left: 5vh;
+      opacity: 0.9;
+    }
+
     /* Stars in the background */
     .star {
       position: absolute;
@@ -78,8 +138,27 @@
       border-radius: 50%;
       opacity: 0.7;
       animation: twinkle 4s infinite alternate;
+      z-index: 3;
     }
-    
+
+    .shooting-star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+      border-radius: 50%;
+      opacity: 0;
+      z-index: 3;
+      animation: shoot 8s linear infinite;
+    }
+
+    @keyframes shoot {
+      0% { transform: translateX(0) translateY(0); opacity: 0; }
+      1% { opacity: 1; }
+      20% { transform: translateX(100vw) translateY(20vh); opacity: 0; }
+      100% { opacity: 0; }
+    }
+
     @keyframes twinkle {
       0% { opacity: 0.3; }
       50% { opacity: 0.8; }
@@ -96,12 +175,31 @@
       opacity: 0.6;
       animation: falling 10s linear infinite;
       z-index: 6;
+      box-shadow: 0 0 3px rgba(0,0,0,0.3);
     }
-    
+
+    .leaf.gold {
+      background-color: #d4af37;
+      animation-duration: 12s;
+    }
+
+    .leaf.red {
+      background-color: #8b3a3a;
+      animation-duration: 8s;
+    }
+
+    .leaf.brown {
+      background-color: #8b4513;
+      animation-duration: 15s;
+    }
+
     @keyframes falling {
-      0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+      0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
       10% { opacity: 0.6; }
-      100% { transform: translateY(80vh) rotate(360deg); opacity: 0; }
+      25% { transform: translateY(20vh) rotate(90deg) translateX(10px); }
+      50% { transform: translateY(40vh) rotate(180deg) translateX(-10px); }
+      75% { transform: translateY(60vh) rotate(270deg) translateX(10px); }
+      100% { transform: translateY(80vh) rotate(360deg) translateX(0); opacity: 0; }
     }
     
     /* Player styling */
@@ -298,8 +396,9 @@
       border-radius: 50%;
       margin: 0 auto;
       touch-action: none;
+      border: 2px solid rgba(100, 100, 100, 0.5);
     }
-    
+
     #joystick-base {
       position: absolute;
       top: 25px;
@@ -310,28 +409,86 @@
       border-radius: 50%;
       box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
     }
-    
+
     #joystick-knob {
       position: absolute;
       top: 50px;
       left: 50px;
       width: 50px;
       height: 50px;
-      background-color: #666;
+      background: radial-gradient(circle, #888 0%, #666 70%, #444 100%);
       border-radius: 50%;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
       cursor: grab;
       transform: translate(-50%, -50%);
       transition: background-color 0.2s;
+      z-index: 101;
     }
-    
+
     #joystick-knob:hover {
-      background-color: #888;
+      background: radial-gradient(circle, #999 0%, #777 70%, #555 100%);
     }
-    
+
     #joystick-knob:active {
       cursor: grabbing;
-      background-color: #aaa;
+      background: radial-gradient(circle, #aaa 0%, #888 70%, #666 100%);
+    }
+
+    /* Direction indicators on joystick */
+    #joystick-container::before,
+    #joystick-container::after {
+      content: "";
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    #joystick-container::before {
+      width: 2px;
+      height: 90%;
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #joystick-container::after {
+      width: 90%;
+      height: 2px;
+      top: 50%;
+      left: 5%;
+      transform: translateY(-50%);
+    }
+
+    /* Joystick labels */
+    .joystick-label {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      font-weight: bold;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    }
+
+    #label-up {
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #label-right {
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #label-down {
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #label-left {
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
     }
     
     #forward-button {
@@ -357,13 +514,36 @@
     #forward-button:hover {
       background-color: #666;
     }
+
+    /* Open Door button */
+    #open-door-button {
+      padding: 10px 20px;
+      background-color: #8b4513;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 120px;
+      margin: 10px auto;
+      font-weight: bold;
+    }
+
+    #open-door-button:hover {
+      background-color: #a0522d;
+    }
     
     /* Door view */
     #door-view {
-      position: absolute;
+      position: fixed; /* Changed from absolute to fixed */
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.9);
+      background-color: rgba(0,0,0,0.95); /* Darker background */
       display: none;
       flex-direction: column;
       justify-content: center;
@@ -435,6 +615,110 @@
       transition: opacity 0.5s;
       z-index: -1;
     }
+
+    /* MCQ styling */
+    #mcq-container {
+      position: fixed !important; /* Use fixed positioning */
+      width: 80%;
+      max-width: 600px;
+      background-color: rgba(0, 0, 0, 0.95);
+      border: 3px solid #888;
+      border-radius: 10px;
+      padding: 20px;
+      color: white;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 9999 !important; /* Very high z-index */
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+      opacity: 1 !important; /* Always fully visible */
+    }
+
+    #mcq-question {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #mcq-options {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .mcq-option {
+      padding: 15px;
+      background-color: #333;
+      border: 2px solid #555;
+      border-radius: 5px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+      width: 100%;
+      margin-bottom: 5px;
+    }
+
+    .mcq-option:hover {
+      background-color: #555;
+      transform: scale(1.02);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .mcq-option.correct {
+      background-color: #2e7d32;
+    }
+
+    .mcq-option.incorrect {
+      background-color: #c62828;
+    }
+
+    /* Custom text input styling */
+    #custom-text-container {
+      position: absolute;
+      width: 80%;
+      max-width: 600px;
+      background-color: rgba(0, 0, 0, 0.9);
+      border: 2px solid #444;
+      border-radius: 10px;
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 201;
+    }
+
+    #custom-text {
+      width: 100%;
+      height: 150px;
+      background-color: #222;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      resize: none;
+      margin-bottom: 15px;
+    }
+
+    #save-custom-text {
+      padding: 10px 20px;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #save-custom-text:hover {
+      background-color: #388e3c;
+    }
     
     /* Game over screen */
     #game-over {
@@ -491,12 +775,32 @@
       font-size: 14px;
       z-index: 100;
     }
+
+    /* Debug button for testing MCQ */
+    #debug-mcq-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 300;
+    }
   </style>
 </head>
 <body>
   <div id="game-container">
+    <!-- Debug button for testing MCQ -->
+    <button id="debug-mcq-button">Test MCQ</button>
+
     <div id="game-world">
-      <div id="wall">
+      <div id="sky">
+        <!-- Moon -->
+        <div id="moon"></div>
+
         <!-- Stars in the night sky -->
         <div class="star" style="top: 5%; left: 10%;"></div>
         <div class="star" style="top: 15%; left: 25%; width: 3px; height: 3px;"></div>
@@ -510,23 +814,62 @@
         <div class="star" style="top: 22%; left: 55%; width: 3px; height: 3px;"></div>
         <div class="star" style="top: 28%; left: 70%;"></div>
         <div class="star" style="top: 35%; left: 90%; width: 3px; height: 3px;"></div>
-        
+
+        <!-- Shooting stars -->
+        <div class="shooting-star" style="top: 10%; left: 0; animation-delay: 2s;"></div>
+        <div class="shooting-star" style="top: 20%; left: 0; animation-delay: 7s;"></div>
+        <div class="shooting-star" style="top: 5%; left: 0; animation-delay: 15s;"></div>
+      </div>
+
+      <div id="wall">
+        <!-- More stars in the wall area -->
+        <div class="star" style="top: 5%; left: 110%;"></div>
+        <div class="star" style="top: 15%; left: 125%; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 8%; left: 140%;"></div>
+        <div class="star" style="top: 20%; left: 160%; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 12%; left: 175%;"></div>
+        <div class="star" style="top: 7%; left: 185%; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 18%; left: 195%;"></div>
+        <div class="star" style="top: 25%; left: 215%; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 30%; left: 235%;"></div>
+        <div class="star" style="top: 22%; left: 255%; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 28%; left: 270%;"></div>
+        <div class="star" style="top: 35%; left: 290%; width: 3px; height: 3px;"></div>
+        <div class="star" style="top: 15%; left: 310%;"></div>
+        <div class="star" style="top: 25%; left: 330%; width: 3px; height: 3px;"></div>
+
         <!-- Vines on the walls -->
         <div class="vine" style="top: 0; left: 15%; height: 40vh; transform: rotate(5deg);"></div>
         <div class="vine" style="top: 0; left: 35%; height: 30vh; transform: rotate(-3deg);"></div>
         <div class="vine" style="top: 0; left: 65%; height: 45vh; transform: rotate(2deg);"></div>
         <div class="vine" style="top: 0; left: 85%; height: 35vh; transform: rotate(-4deg);"></div>
-        
+        <div class="vine" style="top: 0; left: 115%; height: 38vh; transform: rotate(-2deg);"></div>
+        <div class="vine" style="top: 0; left: 145%; height: 42vh; transform: rotate(4deg);"></div>
+        <div class="vine" style="top: 0; left: 175%; height: 32vh; transform: rotate(-5deg);"></div>
+        <div class="vine" style="top: 0; left: 205%; height: 36vh; transform: rotate(3deg);"></div>
+        <div class="vine" style="top: 0; left: 235%; height: 40vh; transform: rotate(-1deg);"></div>
+        <div class="vine" style="top: 0; left: 265%; height: 34vh; transform: rotate(2deg);"></div>
+        <div class="vine" style="top: 0; left: 295%; height: 44vh; transform: rotate(-3deg);"></div>
+        <div class="vine" style="top: 0; left: 325%; height: 38vh; transform: rotate(4deg);"></div>
+
         <!-- Falling leaves -->
         <div class="leaf" style="left: 20%; animation-delay: 0s;"></div>
-        <div class="leaf" style="left: 40%; animation-delay: 3s;"></div>
-        <div class="leaf" style="left: 60%; animation-delay: 6s;"></div>
-        <div class="leaf" style="left: 80%; animation-delay: 9s;"></div>
+        <div class="leaf gold" style="left: 40%; animation-delay: 3s;"></div>
+        <div class="leaf red" style="left: 60%; animation-delay: 6s;"></div>
+        <div class="leaf brown" style="left: 80%; animation-delay: 9s;"></div>
+        <div class="leaf" style="left: 120%; animation-delay: 2s;"></div>
+        <div class="leaf gold" style="left: 150%; animation-delay: 5s;"></div>
+        <div class="leaf red" style="left: 180%; animation-delay: 8s;"></div>
+        <div class="leaf brown" style="left: 210%; animation-delay: 11s;"></div>
+        <div class="leaf" style="left: 240%; animation-delay: 4s;"></div>
+        <div class="leaf gold" style="left: 270%; animation-delay: 7s;"></div>
+        <div class="leaf red" style="left: 300%; animation-delay: 10s;"></div>
+        <div class="leaf brown" style="left: 330%; animation-delay: 13s;"></div>
       </div>
       <div id="ground"></div>
-      
+
       <div id="player"></div>
-      
+
       <div class="door" id="door1">
         <span class="door-number">1</span>
         <div class="doorknob"></div>
@@ -547,7 +890,7 @@
         <span class="door-number">5</span>
         <div class="doorknob"></div>
       </div>
-      
+
       <div class="torch" id="torch1"></div>
       <div class="torch" id="torch2"></div>
       <div class="torch" id="torch3"></div>
@@ -555,23 +898,27 @@
       <div class="torch" id="torch5"></div>
       <div class="torch" id="torch6"></div>
     </div>
-    
+
     <div id="controls">
       <div id="joystick-container">
         <div id="joystick-base"></div>
         <div id="joystick-knob"></div>
+        <span id="label-up" class="joystick-label">UP</span>
+        <span id="label-right" class="joystick-label">RIGHT</span>
+        <span id="label-down" class="joystick-label">DOWN</span>
+        <span id="label-left" class="joystick-label">LEFT</span>
       </div>
     </div>
-    
+
     <div id="position-indicator">Position: 0</div>
-    
+
     <div id="help-text">
       Use the joystick or keyboard (Arrow keys/WASD) to move in all directions.
       Move forward to get closer to doors, and move left/right to navigate the corridor.
-      Find and open the glowing Door 1 to begin your adventure!
+      Look up to see the night sky! Find and open the glowing Door 1 to begin your adventure!
     </div>
   </div>
-  
+
   <div id="door-view">
     <button id="close-door-view">Back to Corridor</button>
     <div id="current-door" class="door-closed">
@@ -579,6 +926,18 @@
       <div class="doorknob"></div>
     </div>
     <div id="door-content"></div>
+
+    <!-- MCQ Container -->
+    <div id="mcq-container">
+      <div id="mcq-question"></div>
+      <div id="mcq-options"></div>
+    </div>
+
+    <!-- Custom Text Input -->
+    <div id="custom-text-container">
+      <textarea id="custom-text" placeholder="Enter your custom text here..."></textarea>
+      <button id="save-custom-text">Save</button>
+    </div>
   </div>
   
   <div id="game-over">
@@ -600,7 +959,15 @@
     const helpText = document.getElementById('help-text');
     const joystickContainer = document.getElementById('joystick-container');
     const joystickKnob = document.getElementById('joystick-knob');
-    
+    const sky = document.getElementById('sky');
+    const wall = document.getElementById('wall');
+    const mcqContainer = document.getElementById('mcq-container');
+    const mcqQuestion = document.getElementById('mcq-question');
+    const mcqOptions = document.getElementById('mcq-options');
+    const customTextContainer = document.getElementById('custom-text-container');
+    const customText = document.getElementById('custom-text');
+    const saveCustomTextButton = document.getElementById('save-custom-text');
+
     const doors = [
       document.getElementById('door1'),
       document.getElementById('door2'),
@@ -608,7 +975,8 @@
       document.getElementById('door4'),
       document.getElementById('door5')
     ];
-    
+
+    // Door content will now be set after answering MCQs and entering custom text
     const doorContents = [
       "You found a rusty key. It might be useful later.",
       "A strange symbol is carved onto the wall. It glows faintly.",
@@ -616,11 +984,50 @@
       "You see a mysterious map on the wall with an X marking something important.",
       "Congratulations! You've reached the magical door and unlocked the secrets beyond!"
     ];
-    
+
+    // Custom text for each door
+    const customDoorTexts = ["", "", "", "", ""];
+
+    // MCQ questions and answers for each door
+    const mcqQuestions = [
+      {
+        question: "What is the primary purpose of a key?",
+        options: ["To open locks", "To close doors", "To break windows", "To create light"],
+        correctAnswer: 0
+      },
+      {
+        question: "What might a glowing symbol represent?",
+        options: ["A warning", "A decoration", "Magic or power", "A manufacturing mark"],
+        correctAnswer: 2
+      },
+      {
+        question: "What do you need to open a locked chest?",
+        options: ["A hammer", "A key", "A spell", "A torch"],
+        correctAnswer: 1
+      },
+      {
+        question: "What does an X typically mark on a map?",
+        options: ["A dangerous area", "A treasure location", "The starting point", "The map creator's home"],
+        correctAnswer: 1
+      },
+      {
+        question: "What might be beyond the final door?",
+        options: ["More corridors", "A new adventure", "The exit", "All of the above"],
+        correctAnswer: 3
+      }
+    ];
+
+    // Track which doors have been unlocked
+    const doorUnlocked = [true, false, false, false, false]; // First door starts unlocked
+
     let currentX = 0;
     let maxX = 350;
     let moveSpeed = 5;
-    
+
+    // Vertical look variables
+    let verticalLook = 0;
+    let maxVerticalLook = 40; // Maximum vertical look angle (in vh units)
+
     // Forward movement variables
     let isForwardMode = false;
     let currentZ = 0;
@@ -629,32 +1036,81 @@
     // Update the player position
     function updatePosition() {
       // Move the game world instead of the player (parallax effect)
-      gameWorld.style.transform = `translateX(${-currentX}vw)`;
-      
+      gameWorld.style.transform = `translateX(${-currentX}vw) translateY(${verticalLook}vh)`;
+
       // Update position indicator
       positionIndicator.textContent = `Position: ${Math.floor(currentX / 10)}/35`;
-      
+
+      // Update sky visibility based on vertical look
+      if (verticalLook > 0) {
+        // Looking up - show more sky
+        sky.style.height = `${40 + verticalLook}vh`;
+      } else {
+        // Looking straight or down
+        sky.style.height = `${Math.max(0, 40 + verticalLook)}vh`;
+      }
+
       // Update door interactivity based on position
       updateDoorInteractivity();
     }
-    
+
     // Update which doors are interactive based on position
     function updateDoorInteractivity() {
       doors.forEach((door, index) => {
         const doorX = 200 + (index * 30); // Door positions are 200, 230, 260, 290, 320
-        
-        // A door is interactive if the player is within 10 units of the door
+
+        // A door is interactive if the player is within 15 units of the door (increased for better usability)
         const distance = Math.abs(doorX - currentX);
-        if (distance < 10) {
+
+        // Only make the door interactive if it's unlocked or it's the next door to unlock
+        const isUnlockable = doorUnlocked[index] || (index > 0 && doorUnlocked[index-1]);
+
+        // Always make doors clickable, but we'll handle the interaction logic in the click handler
+        door.style.pointerEvents = 'auto';
+
+        // Reset animation first
+        door.style.animation = 'none';
+
+        if (distance < 15 && isUnlockable) {
+          // Visual indication that door is interactive
           door.style.cursor = 'pointer';
-          door.style.filter = 'brightness(1.2)';
+          door.style.filter = 'brightness(1.5)';
+          door.style.transform = 'scale(1.05)';
+          door.style.boxShadow = '0 0 20px rgba(255, 255, 0, 0.8)';
+
           // Show hint for door 1
           if (index === 0) {
             helpText.textContent = "Door 1 is within reach! Click on it to interact.";
+          } else if (doorUnlocked[index-1] && !doorUnlocked[index]) {
+            helpText.textContent = `Door ${index + 1} is now accessible! Click on it to interact.`;
+          }
+
+          // Add highlight animation for the door that's next to unlock
+          if ((index === 0 && !doorUnlocked[1]) ||
+              (index > 0 && doorUnlocked[index-1] && !doorUnlocked[index])) {
+            door.style.animation = 'highlight 1.5s infinite alternate';
           }
         } else {
+          // Visual indication that door is not interactive
           door.style.cursor = 'default';
-          door.style.filter = 'brightness(0.7)';
+          door.style.transform = 'scale(1)';
+
+          if (isUnlockable) {
+            // Door is unlockable but not in range
+            door.style.filter = 'brightness(0.9)';
+            door.style.boxShadow = 'none';
+
+            // If this is the next door to unlock, make it glow even when not in range
+            if ((index === 0 && !doorUnlocked[1]) ||
+                (index > 0 && doorUnlocked[index-1] && !doorUnlocked[index])) {
+              door.style.boxShadow = '0 0 15px rgba(255, 255, 0, 0.5)';
+              door.style.animation = 'highlight 1.5s infinite alternate';
+            }
+          } else {
+            // Door is locked
+            door.style.filter = 'brightness(0.4) grayscale(0.5)';
+            door.style.boxShadow = 'none';
+          }
         }
       });
     }
@@ -669,8 +1125,8 @@
         // Apply a small visual effect for forward movement
         currentZ += 5;
         if (currentZ < 100) {
-          player.style.transform = `translateZ(${currentZ}px) scale(${1 + currentZ/100})`;
-          requestAnimationFrame(moveForward);
+        player.style.transform = `translateZ(${currentZ}px) scale(${1 + currentZ / 100})`;
+        requestAnimationFrame(moveForward);
         } else {
           // We've reached the maximum forward position
           // Reset the visual effect
@@ -801,58 +1257,78 @@
       if (moveInterval) {
         clearInterval(moveInterval);
       }
-      
+
       // Set up a new interval for smooth movement
       moveInterval = setInterval(() => {
-        // Only move if joystick is significantly displaced
+        // Horizontal movement (left/right)
         if (Math.abs(joystickX) > 0.1) {
           resetForwardMovement();
-          
+
           // Move left or right based on joystick X position
           const moveAmount = joystickX * moveSpeed;
           currentX += moveAmount;
-          
+
           // Clamp position within bounds
           if (currentX < 0) currentX = 0;
           if (currentX > maxX) currentX = maxX;
-          
+
           updatePosition();
         }
-        
-        // Forward/backward movement based on joystick Y position
-        if (Math.abs(joystickY) > 0.3) {
-          // Forward movement (negative Y is up)
-          if (joystickY < 0) {
-            // Move forward (closer to doors)
-            let nearDoor = false;
-            doors.forEach((door, index) => {
-              const doorX = 200 + (index * 30);
-              const distance = Math.abs(doorX - currentX);
-              
-              if (distance < 10) {
-                nearDoor = true;
-                isForwardMode = true;
-                targetDoorIndex = index;
-              }
-            });
-            
-            // If not near any door, still move forward
-            if (!nearDoor) {
-              isForwardMode = true;
-              targetDoorIndex = -1;
-            }
-            
-            // Start the animation loop
-            if (isForwardMode) {
-              requestAnimationFrame(moveForward);
-            }
-          } else {
-            // Move backward (away from doors)
-            resetForwardMovement();
-            // Move back slightly
-            currentX -= Math.abs(joystickY) * moveSpeed * 0.5;
-            if (currentX < 0) currentX = 0;
+
+        // Vertical look (up/down) and forward/backward movement
+        if (Math.abs(joystickY) > 0.1) {
+          // Determine if we're in look mode or move mode
+          // If joystick is mostly vertical (Y axis dominant), we're in look mode
+          const isLookMode = Math.abs(joystickY) > Math.abs(joystickX) * 2;
+
+          if (isLookMode) {
+            // Look up/down
+            // Negative Y is up, positive Y is down
+            verticalLook -= joystickY * 2; // Adjust sensitivity
+
+            // Clamp vertical look
+            if (verticalLook > maxVerticalLook) verticalLook = maxVerticalLook;
+            if (verticalLook < -20) verticalLook = -20; // Limit looking down
+
             updatePosition();
+          } else {
+            // Forward/backward movement
+            // Forward movement (negative Y is up)
+            if (joystickY < -0.3) {
+              // Move forward (closer to doors)
+              let nearDoor = false;
+              doors.forEach((door, index) => {
+                const doorX = 200 + (index * 30);
+                const distance = Math.abs(doorX - currentX);
+
+                // Only interact with unlockable doors
+                const isUnlockable = doorUnlocked[index] || (index > 0 && doorUnlocked[index-1]);
+
+                if (distance < 10 && isUnlockable) {
+                  nearDoor = true;
+                  isForwardMode = true;
+                  targetDoorIndex = index;
+                }
+              });
+
+              // If not near any door, still move forward
+              if (!nearDoor) {
+                isForwardMode = true;
+                targetDoorIndex = -1;
+              }
+
+              // Start the animation loop
+              if (isForwardMode) {
+                requestAnimationFrame(moveForward);
+              }
+            } else if (joystickY > 0.3) {
+              // Move backward (away from doors)
+              resetForwardMovement();
+              // Move back slightly
+              currentX -= Math.abs(joystickY) * moveSpeed * 0.5;
+              if (currentX < 0) currentX = 0;
+              updatePosition();
+            }
           }
         }
       }, 50); // Update every 50ms for smooth movement
@@ -897,6 +1373,9 @@
     
     // Handle keyboard controls
     document.addEventListener('keydown', (e) => {
+      // Check if shift is pressed for look mode
+      const isLookMode = e.shiftKey;
+
       if (e.key === 'ArrowLeft' || e.key === 'a') {
         resetForwardMovement();
         if (currentX > 0) {
@@ -910,66 +1389,275 @@
           updatePosition();
         }
       } else if (e.key === 'ArrowUp' || e.key === 'w') {
-        // Move forward (closer to doors)
-        let nearDoor = false;
-        doors.forEach((door, index) => {
-          const doorX = 200 + (index * 30);
-          const distance = Math.abs(doorX - currentX);
-          
-          if (distance < 10) {
-            nearDoor = true;
+        if (isLookMode) {
+          // Look up
+          verticalLook += 5;
+          if (verticalLook > maxVerticalLook) verticalLook = maxVerticalLook;
+          updatePosition();
+        } else {
+          // Move forward (closer to doors)
+          let nearDoor = false;
+          doors.forEach((door, index) => {
+            const doorX = 200 + (index * 30);
+            const distance = Math.abs(doorX - currentX);
+
+            // Only interact with unlockable doors
+            const isUnlockable = doorUnlocked[index] || (index > 0 && doorUnlocked[index-1]);
+
+            if (distance < 10 && isUnlockable) {
+              nearDoor = true;
+              isForwardMode = true;
+              targetDoorIndex = index;
+            }
+          });
+
+          // If not near any door, still move forward
+          if (!nearDoor) {
             isForwardMode = true;
-            targetDoorIndex = index;
+            targetDoorIndex = -1;
           }
-        });
-        
-        // If not near any door, still move forward
-        if (!nearDoor) {
-          isForwardMode = true;
-          targetDoorIndex = -1;
-        }
-        
-        // Start the animation loop
-        if (isForwardMode) {
-          requestAnimationFrame(moveForward);
+
+          // Start the animation loop
+          if (isForwardMode) {
+            requestAnimationFrame(moveForward);
+          }
         }
       } else if (e.key === 'ArrowDown' || e.key === 's') {
-        // Move backward (away from doors)
-        resetForwardMovement();
-        // Move back slightly
-        currentX -= moveSpeed * 0.5;
-        if (currentX < 0) currentX = 0;
-        updatePosition();
+        if (isLookMode) {
+          // Look down
+          verticalLook -= 5;
+          if (verticalLook < -20) verticalLook = -20;
+          updatePosition();
+        } else {
+          // Move backward (away from doors)
+          resetForwardMovement();
+          // Move back slightly
+          currentX -= moveSpeed * 0.5;
+          if (currentX < 0) currentX = 0;
+          updatePosition();
+        }
+      }
+    });
+
+    // Add keyboard help text
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'Shift') {
+        helpText.textContent = "Use the joystick or keyboard (Arrow keys/WASD) to move in all directions.";
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Shift') {
+        helpText.textContent = "LOOK MODE: Use Up/Down arrows to look at the sky or ground.";
       }
     });
     
-    // Handle door clicks
-    doors.forEach((door, index) => {
-      door.addEventListener('click', () => {
-        const doorX = 200 + (index * 30);
-        const distance = Math.abs(doorX - currentX);
-        
-        // Only interact with doors that are close enough
-        if (distance < 10) {
-          // Add swing animation to the door
-          door.style.transition = 'transform 1s ease-in-out';
-          door.style.transformOrigin = 'left';
-          door.style.transform = 'rotateY(-80deg)';
-          
-          // Show a message
-          helpText.textContent = `You've opened Door ${index + 1}! Explore what's inside...`;
-          
-          // After animation completes, show the door view
-          setTimeout(() => {
-            showDoorView(index);
-            // Reset door transform after showing door view
-            setTimeout(() => {
-              door.style.transform = '';
-            }, 500);
-          }, 1000);
+    // Handle door clicks - completely rewritten for reliability
+    function setupDoorClickHandlers() {
+      // First, make sure we have the correct door references
+      // Use let instead of const for the doors array to allow reassignment
+      let doorElements = [
+        document.getElementById('door1'),
+        document.getElementById('door2'),
+        document.getElementById('door3'),
+        document.getElementById('door4'),
+        document.getElementById('door5')
+      ];
+
+      // Now set up click handlers for each door
+      doorElements.forEach((door, index) => {
+        // Make sure the door exists
+        if (!door) {
+          console.error(`Door ${index + 1} element not found!`);
+          return;
         }
+
+        // Remove any existing click event listeners by cloning
+        const newDoor = door.cloneNode(true);
+        door.parentNode.replaceChild(newDoor, door);
+        doorElements[index] = newDoor;
+        door = newDoor;
+
+        // Update the global doors array with the new door elements
+        doors[index] = newDoor;
+
+        // Make sure the door is clickable
+        door.style.cursor = 'pointer';
+        door.style.zIndex = '50'; // Ensure doors are above other elements
+
+        // Add a direct click handler
+        door.onclick = function(event) {
+          // Prevent any default behavior
+          event.preventDefault();
+          event.stopPropagation();
+
+          // Show a debug message
+          console.log(`Door ${index + 1} clicked directly! Position: ${currentX}, Door position: ${200 + (index * 30)}`);
+
+          const doorX = 200 + (index * 30);
+          const distance = Math.abs(doorX - currentX);
+
+          // Debug the distance and unlockable status
+          console.log(`Distance: ${distance}, Unlockable: ${doorUnlocked[index] || (index > 0 && doorUnlocked[index-1])}`);
+
+          // For now, let's make all doors interactive regardless of distance
+          // to ensure the functionality works
+          const isUnlockable = doorUnlocked[index] || (index > 0 && doorUnlocked[index-1]);
+
+          if (isUnlockable) {
+            // Add swing animation to the door
+            door.style.transition = 'transform 1s ease-in-out';
+            door.style.transformOrigin = 'left';
+            door.style.transform = 'rotateY(-80deg)';
+
+            // Show a message
+            helpText.textContent = `You've opened Door ${index + 1}! Explore what's inside...`;
+
+            // After animation completes, show the door view
+            setTimeout(() => {
+              // Reset door transform after showing door view
+              door.style.transform = '';
+
+              // Always show the door view with MCQ for all doors
+              showDoorView(index);
+            }, 1000);
+          } else {
+            // If not unlockable, show a hint
+            helpText.textContent = `You need to unlock the previous door first.`;
+          }
+        };
+
+        // Also add a mousedown handler for better responsiveness
+        door.onmousedown = function(event) {
+          console.log(`Door ${index + 1} mousedown!`);
+          event.preventDefault();
+          event.stopPropagation();
+        };
+
+        // Add a touch handler for mobile devices
+        door.ontouchstart = function(event) {
+          console.log(`Door ${index + 1} touchstart!`);
+          event.preventDefault();
+
+          // Trigger the click handler
+          door.onclick(event);
+        };
       });
-    });
+
+      console.log("Door click handlers have been set up");
+    }
+
+    // Call the setup function
+    setupDoorClickHandlers();
+
+    // Show MCQ for a door - now just redirects to showDoorView for consistency
+    function showMCQ(doorIndex) {
+      // Call the showDoorView function to ensure consistent behavior
+      showDoorView(doorIndex);
+
+      // Set up door click handler
+      currentDoor.onclick = function() {
+        // Open the door
+        this.classList.remove('door-closed');
+        this.classList.add('door-open');
+
+        // Show MCQ after door opens
+        setTimeout(() => {
+          // Show MCQ container
+          mcqContainer.style.display = 'flex';
+
+          // Set MCQ question and options
+          const mcq = mcqQuestions[doorIndex];
+          mcqQuestion.textContent = mcq.question;
+
+          // Clear previous options
+          mcqOptions.innerHTML = '';
+
+          // Add options
+          mcq.options.forEach((option, optionIndex) => {
+            const optionButton = document.createElement('button');
+            optionButton.className = 'mcq-option';
+            optionButton.textContent = option;
+
+            // Add click handler for option
+            optionButton.addEventListener('click', () => {
+              // Check if answer is correct
+              if (optionIndex === mcq.correctAnswer) {
+                // Mark as correct
+                optionButton.classList.add('correct');
+
+                // Unlock the door
+                doorUnlocked[doorIndex] = true;
+
+                // Hide MCQ after a delay
+                setTimeout(() => {
+                  mcqContainer.style.display = 'none';
+
+                  // Show door content directly (skipping custom text for simplicity)
+                  doorContent.textContent = doorContents[doorIndex];
+                  doorContent.style.opacity = '1';
+
+                  // If it's door 5, show game over after a delay
+                  if (doorIndex === 4) {
+                    setTimeout(() => {
+                      showGameOver("Congratulations! You've completed the Corridor Adventure!");
+                    }, 3000);
+                  }
+                }, 1500);
+              } else {
+                // Mark as incorrect
+                optionButton.classList.add('incorrect');
+
+                // Show correct answer
+                const correctButton = mcqOptions.children[mcq.correctAnswer];
+                correctButton.classList.add('correct');
+
+                // Allow retry after a delay
+                setTimeout(() => {
+                  // Reset options
+                  Array.from(mcqOptions.children).forEach(btn => {
+                    btn.classList.remove('correct', 'incorrect');
+                  });
+                }, 2000);
+              }
+            });
+
+            mcqOptions.appendChild(optionButton);
+          });
+        }, 800);
+      };
+
+      // Make sure the door is clickable
+      currentDoor.style.cursor = 'pointer';
+
+      // Automatically trigger the click for better user experience
+      setTimeout(() => {
+        currentDoor.click();
+      }, 500);
+    }
+
+    // Show custom text input
+    function showCustomTextInput(doorIndex) {
+      // For simplicity, we're skipping the custom text input in this implementation
+      // and directly showing the door content
+
+      // Open the door
+      currentDoor.classList.remove('door-closed');
+      currentDoor.classList.add('door-open');
+
+      // Show content after door opens
+      setTimeout(() => {
+        doorContent.textContent = doorContents[doorIndex];
+        doorContent.style.opacity = '1';
+
+        // If it's door 5, show game over after a delay
+        if (doorIndex === 4) {
+          setTimeout(() => {
+            showGameOver("Congratulations! You've completed the Corridor Adventure!");
+          }, 3000);
+        }
+      }, 800);
+    }
     
     // Auto-open first door when initially in range
     function checkFirstDoor() {
@@ -981,71 +1669,249 @@
       }
     }
     
-    // Show door view
+    // Show door view - simplified and more reliable
     function showDoorView(doorIndex) {
+      console.log(`Showing door view for Door ${doorIndex + 1}`);
+
       // Reset forward movement when showing door view
       isForwardMode = false;
-      
-      // Display the door view
+
+      // Display the door view - make sure it's fully visible
       doorView.style.display = 'flex';
-      currentDoor.querySelector('.door-number').textContent = doorIndex + 1;
-      
+      doorView.style.opacity = '1';
+
+      // Force the MCQ container to be visible
+      mcqContainer.style.position = 'fixed';
+      mcqContainer.style.top = '50%';
+      mcqContainer.style.left = '50%';
+      mcqContainer.style.transform = 'translate(-50%, -50%)';
+      mcqContainer.style.zIndex = '999'; // Very high z-index
+      mcqContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+      mcqContainer.style.border = '3px solid #888';
+      mcqContainer.style.boxShadow = '0 0 40px rgba(255, 255, 255, 0.3)';
+
+      // Set door number
+      const doorNumberElement = currentDoor.querySelector('.door-number');
+      if (doorNumberElement) {
+        doorNumberElement.textContent = doorIndex + 1;
+      }
+
       // Set a special style for door 5
       if (doorIndex === 4) {
         currentDoor.style.backgroundColor = '#4a1c82';
         currentDoor.style.borderColor = '#321258';
         currentDoor.style.boxShadow = '0 0 30px rgba(148, 0, 211, 0.9)';
-        currentDoor.querySelector('.door-number').style.color = 'gold';
-        currentDoor.querySelector('.doorknob').style.backgroundColor = 'gold';
+
+        if (doorNumberElement) {
+          doorNumberElement.style.color = 'gold';
+        }
+
+        const doorknob = currentDoor.querySelector('.doorknob');
+        if (doorknob) {
+          doorknob.style.backgroundColor = 'gold';
+        }
       } else {
         currentDoor.style.backgroundColor = '#5a3921';
         currentDoor.style.borderColor = '#412a18';
         currentDoor.style.boxShadow = '0 0 30px black';
-        currentDoor.querySelector('.door-number').style.color = '#ccc';
-        currentDoor.querySelector('.doorknob').style.backgroundColor = '#b8860b';
+
+        if (doorNumberElement) {
+          doorNumberElement.style.color = '#ccc';
+        }
+
+        const doorknob = currentDoor.querySelector('.doorknob');
+        if (doorknob) {
+          doorknob.style.backgroundColor = '#b8860b';
+        }
       }
-      
+
       // Special highlight for door 1
       if (doorIndex === 0) {
         currentDoor.style.boxShadow = '0 0 30px rgba(255, 255, 0, 0.8)';
       }
-      
+
       // Reset door state and content
       currentDoor.classList.remove('door-open');
       currentDoor.classList.add('door-closed');
       doorContent.style.opacity = '0';
       doorContent.textContent = '';
-      
-      // Remove any existing click handlers
-      currentDoor.onclick = null;
-      
-      // Make all doors clickable to open
-      currentDoor.onclick = function() {
-        // Remove the closed class and add the open class
-        this.classList.remove('door-closed');
-        this.classList.add('door-open');
-        
+
+      // Hide MCQ container initially
+      mcqContainer.style.display = 'none';
+
+      // Automatically open the door after a short delay
+      setTimeout(() => {
+        // Open the door
+        currentDoor.classList.remove('door-closed');
+        currentDoor.classList.add('door-open');
+
         // Show content after door opens
         setTimeout(() => {
-          doorContent.textContent = doorContents[doorIndex];
-          doorContent.style.opacity = '1';
-          
-          // If it's door 5, show game over after a delay
-          if (doorIndex === 4) {
-            setTimeout(() => {
-              showGameOver("Congratulations! You've completed the Corridor Adventure!");
-            }, 3000);
+          // Always show MCQ for all doors when they are opened
+
+          // First make sure the door view is fully visible
+          doorView.style.display = 'flex';
+
+          // Create a direct MCQ display without using the function
+          mcqContainer.style.display = 'flex';
+          mcqContainer.style.opacity = '1';
+
+          // Set MCQ question and options directly
+          const mcq = mcqQuestions[doorIndex];
+          mcqQuestion.textContent = mcq.question;
+
+          // Clear previous options
+          mcqOptions.innerHTML = '';
+
+          // Add options
+          mcq.options.forEach((option, optionIndex) => {
+            const optionButton = document.createElement('button');
+            optionButton.className = 'mcq-option';
+            optionButton.textContent = option;
+
+            // Add click handler for option
+            optionButton.addEventListener('click', () => {
+              // Check if answer is correct
+              if (optionIndex === mcq.correctAnswer) {
+                // Mark as correct
+                optionButton.classList.add('correct');
+
+                // Unlock the door if it's not already unlocked
+                if (!doorUnlocked[doorIndex]) {
+                  doorUnlocked[doorIndex] = true;
+                }
+
+                // Hide MCQ after a delay
+                setTimeout(() => {
+                  mcqContainer.style.display = 'none';
+
+                  // Show door content
+                  doorContent.textContent = doorContents[doorIndex];
+                  doorContent.style.opacity = '1';
+                }, 1500);
+              } else {
+                // Mark as incorrect
+                optionButton.classList.add('incorrect');
+
+                // Show correct answer
+                const correctButton = mcqOptions.children[mcq.correctAnswer];
+                correctButton.classList.add('correct');
+              }
+            });
+
+            mcqOptions.appendChild(optionButton);
+          });
+
+          // Show a hint message
+          if (!doorUnlocked[doorIndex] && doorIndex > 0) {
+            helpText.textContent = `Answer the question correctly to unlock Door ${doorIndex + 1}!`;
+          } else {
+            helpText.textContent = `Answer the question to continue exploring Door ${doorIndex + 1}!`;
           }
+
+          // Log for debugging
+          console.log("MCQ should be visible now");
+          console.log("MCQ container display:", mcqContainer.style.display);
+          console.log("MCQ container opacity:", mcqContainer.style.opacity);
         }, 800);
-      };
-      
-      // Make sure the door is clickable
-      currentDoor.style.cursor = 'pointer';
+      }, 500);
+    }
+
+    // Separate function to show MCQ for a door
+    function showMCQForDoor(doorIndex) {
+      console.log(`Showing MCQ for Door ${doorIndex + 1}`);
+
+      // Show MCQ container immediately
+      console.log("Forcing MCQ container to be visible");
+
+      // Force the MCQ container to be visible with !important styles
+      mcqContainer.setAttribute('style', 'display: flex !important; opacity: 1 !important; z-index: 9999 !important; position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;');
+
+      // Log to console for debugging
+      console.log("MCQ container should now be visible");
+      console.log("MCQ container display:", window.getComputedStyle(mcqContainer).display);
+      console.log("MCQ container opacity:", window.getComputedStyle(mcqContainer).opacity);
+      console.log("MCQ container z-index:", window.getComputedStyle(mcqContainer).zIndex);
+
+      // Set MCQ question and options
+      const mcq = mcqQuestions[doorIndex];
+      mcqQuestion.textContent = mcq.question;
+
+      // Clear previous options
+      mcqOptions.innerHTML = '';
+
+      // Add options
+      mcq.options.forEach((option, optionIndex) => {
+        const optionButton = document.createElement('button');
+        optionButton.className = 'mcq-option';
+        optionButton.textContent = option;
+
+        // Add click handler for option
+        optionButton.addEventListener('click', () => {
+          // Check if answer is correct
+          if (optionIndex === mcq.correctAnswer) {
+            // Mark as correct
+            optionButton.classList.add('correct');
+
+            // Unlock the door if it's not already unlocked
+            if (!doorUnlocked[doorIndex]) {
+              doorUnlocked[doorIndex] = true;
+            }
+
+            // Hide MCQ after a delay
+            setTimeout(() => {
+              mcqContainer.style.display = 'none';
+
+              // Show door content
+              doorContent.textContent = doorContents[doorIndex];
+              doorContent.style.opacity = '1';
+
+              // Show a success message
+              helpText.textContent = `You've unlocked Door ${doorIndex + 1}! The next door is now accessible.`;
+
+              // Make the next door glow when we return to the corridor
+              setTimeout(() => {
+                // Update door interactivity to show the next door as available
+                updateDoorInteractivity();
+
+                // Specifically highlight the next door if it exists
+                if (doorIndex < 4) {
+                  const nextDoor = document.getElementById(`door${doorIndex + 2}`);
+                  if (nextDoor) {
+                    nextDoor.style.boxShadow = '0 0 20px rgba(255, 255, 0, 0.8)';
+                    nextDoor.style.animation = 'highlight 1.5s infinite alternate';
+                  }
+                }
+              }, 500);
+            }, 1500);
+          } else {
+            // Mark as incorrect
+            optionButton.classList.add('incorrect');
+
+            // Show correct answer
+            const correctButton = mcqOptions.children[mcq.correctAnswer];
+            if (correctButton) {
+              correctButton.classList.add('correct');
+            }
+
+            // Allow retry after a delay
+            setTimeout(() => {
+              // Reset options
+              Array.from(mcqOptions.children).forEach(btn => {
+                btn.classList.remove('correct', 'incorrect');
+              });
+            }, 2000);
+          }
+        });
+
+        mcqOptions.appendChild(optionButton);
+      });
     }
     
     // Close door view
     closeDoorViewButton.addEventListener('click', () => {
       doorView.style.display = 'none';
+      mcqContainer.style.display = 'none'; // Also hide the MCQ container
       resetForwardMovement();
     });
     
@@ -1062,19 +1928,68 @@
       updatePosition();
       gameOver.style.display = 'none';
       doorView.style.display = 'none';
+      mcqContainer.style.display = 'none'; // Also hide the MCQ container
     });
     
     // Set initial position near door 1
     function moveToDoor1() {
-      currentX = 200;
+      currentX = 195; // Position slightly to the left of door 1 for better visibility
       updatePosition();
       checkFirstDoor();
+
+      // Make sure door 1 is highlighted
+      const door1 = document.getElementById('door1');
+      door1.style.filter = 'brightness(1.5)';
+      door1.style.transform = 'scale(1.05)';
+      door1.style.boxShadow = '0 0 20px rgba(255, 255, 0, 0.8)';
+      door1.style.animation = 'highlight 1.5s infinite alternate';
+
+      // Show initial help text
+      helpText.textContent = "Door 1 is within reach! Click on it to interact.";
     }
-    
+
     // Initialize
     setTimeout(() => {
-      moveToDoor1();
+      // Initialize joystick first
       initJoystick();
+
+      // Set up door click handlers first to ensure they work
+      setupDoorClickHandlers();
+
+      // Then move to door 1
+      moveToDoor1();
+
+      // Update door interactivity
+      updateDoorInteractivity();
+
+      // Make sure Door 1 is properly highlighted
+      const door1 = document.getElementById('door1');
+      if (door1) {
+        console.log("Setting up Door 1 highlight");
+        door1.style.boxShadow = '0 0 20px rgba(255, 255, 0, 0.8)';
+        door1.style.animation = 'highlight 1.5s infinite alternate';
+      }
+
+      // Add a global click handler for debugging
+      document.addEventListener('click', function(event) {
+        console.log("Document clicked at:", event.clientX, event.clientY);
+
+        // Check if we're near any doors
+        doors.forEach((door, index) => {
+          const doorRect = door.getBoundingClientRect();
+          console.log(`Door ${index + 1} rect:`, doorRect);
+
+          // Check if click is within door bounds
+          if (
+            event.clientX >= doorRect.left &&
+            event.clientX <= doorRect.right &&
+            event.clientY >= doorRect.top &&
+            event.clientY <= doorRect.bottom
+          ) {
+            console.log(`Click detected on Door ${index + 1}!`);
+          }
+        });
+      });
     }, 1000);
     
     // Add some dynamic vines and leaves
@@ -1087,7 +2002,7 @@
         vine.style.height = (20 + Math.random() * 30) + 'vh';
         vine.style.transform = `rotate(${Math.random() * 10 - 5}deg)`;
         document.getElementById('wall').appendChild(vine);
-        
+
         // Add some leaves to the vine
         const leafCount = Math.floor(Math.random() * 3) + 1;
         for (let j = 0; j < leafCount; j++) {
@@ -1100,7 +2015,7 @@
           vine.appendChild(leaf);
         }
       }
-      
+
       // Add more stars
       for (let i = 0; i < 30; i++) {
         const star = document.createElement('div');
@@ -1115,9 +2030,185 @@
         document.getElementById('wall').appendChild(star);
       }
     }
-    
+
+    // Debug function to help troubleshoot door interactions
+    function debugDoorInteractions() {
+      console.log("Debug: Door Interactions");
+      console.log("Current X position:", currentX);
+
+      doors.forEach((door, index) => {
+        const doorX = 200 + (index * 30);
+        const distance = Math.abs(doorX - currentX);
+        const isUnlockable = doorUnlocked[index] || (index > 0 && doorUnlocked[index-1]);
+
+        console.log(`Door ${index + 1}:`);
+        console.log(`  Position: ${doorX}`);
+        console.log(`  Distance: ${distance}`);
+        console.log(`  Unlockable: ${isUnlockable}`);
+        console.log(`  Unlocked: ${doorUnlocked[index]}`);
+        console.log(`  Interactive: ${distance < 15 && isUnlockable}`);
+      });
+
+      // Add a direct interaction button for each door
+      doors.forEach((door, index) => {
+        // Remove any existing debug buttons first
+        const existingButtons = door.querySelectorAll('.debug-button');
+        existingButtons.forEach(btn => btn.remove());
+
+        const debugButton = document.createElement('button');
+        debugButton.textContent = `Open Door ${index + 1}`;
+        debugButton.className = 'debug-button';
+        debugButton.style.position = 'absolute';
+        debugButton.style.top = '-30px';
+        debugButton.style.left = '0';
+        debugButton.style.zIndex = '100';
+        debugButton.style.backgroundColor = 'red';
+        debugButton.style.color = 'white';
+        debugButton.style.border = 'none';
+        debugButton.style.padding = '5px';
+        debugButton.style.cursor = 'pointer';
+
+        debugButton.addEventListener('click', (event) => {
+          event.stopPropagation();
+          console.log(`Debug button for Door ${index + 1} clicked!`);
+
+          // Force door interaction regardless of distance
+          console.log("Forcing door interaction");
+
+          // Add swing animation to the door
+          door.style.transition = 'transform 1s ease-in-out';
+          door.style.transformOrigin = 'left';
+          door.style.transform = 'rotateY(-80deg)';
+
+          // Show a message
+          helpText.textContent = `You've opened Door ${index + 1}! Explore what's inside...`;
+
+          // After animation completes, show the door view
+          setTimeout(() => {
+            // Reset door transform
+            door.style.transform = '';
+
+            // Show door view or MCQ
+            if (doorUnlocked[index]) {
+              showDoorView(index);
+            } else {
+              showMCQ(index);
+            }
+          }, 1000);
+        });
+
+        door.appendChild(debugButton);
+      });
+    }
+
     // Call the function to add dynamic elements
     addDynamicElements();
+
+    // Call debug function after a short delay
+    setTimeout(debugDoorInteractions, 2000);
+  </script>
+</body>
+</html>        for (let j = 0; j < leafCount; j++) {
+          const leaf = document.createElement('div');
+          leaf.className = 'leaf';
+          leaf.style.position = 'absolute';
+          leaf.style.top = (Math.random() * 100) + '%';
+          leaf.style.left = (Math.random() * 10 - 5) + 'px';
+          leaf.style.animationDuration = (5 + Math.random() * 10) + 's';
+          vine.appendChild(leaf);
+        }
+      }
+
+      // Add more stars
+      for (let i = 0; i < 30; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.top = (Math.random() * 40) + '%';
+        star.style.left = (Math.random() * 300 + 50) + 'vw'; // Position along the corridor
+        star.style.animationDelay = (Math.random() * 4) + 's';
+        if (Math.random() > 0.7) {
+          star.style.width = '3px';
+          star.style.height = '3px';
+        }
+        document.getElementById('wall').appendChild(star);
+      }
+    }
+
+    // Debug function to help troubleshoot door interactions
+    function debugDoorInteractions() {
+      console.log("Debug: Door Interactions");
+      console.log("Current X position:", currentX);
+
+      doors.forEach((door, index) => {
+        const doorX = 200 + (index * 30);
+        const distance = Math.abs(doorX - currentX);
+        const isUnlockable = doorUnlocked[index] || (index > 0 && doorUnlocked[index-1]);
+
+        console.log(`Door ${index + 1}:`);
+        console.log(`  Position: ${doorX}`);
+        console.log(`  Distance: ${distance}`);
+        console.log(`  Unlockable: ${isUnlockable}`);
+        console.log(`  Unlocked: ${doorUnlocked[index]}`);
+        console.log(`  Interactive: ${distance < 15 && isUnlockable}`);
+      });
+
+      // Add a direct interaction button for each door
+      doors.forEach((door, index) => {
+        // Remove any existing debug buttons first
+        const existingButtons = door.querySelectorAll('.debug-button');
+        existingButtons.forEach(btn => btn.remove());
+
+        const debugButton = document.createElement('button');
+        debugButton.textContent = `Open Door ${index + 1}`;
+        debugButton.className = 'debug-button';
+        debugButton.style.position = 'absolute';
+        debugButton.style.top = '-30px';
+        debugButton.style.left = '0';
+        debugButton.style.zIndex = '100';
+        debugButton.style.backgroundColor = 'red';
+        debugButton.style.color = 'white';
+        debugButton.style.border = 'none';
+        debugButton.style.padding = '5px';
+        debugButton.style.cursor = 'pointer';
+
+        debugButton.addEventListener('click', (event) => {
+          event.stopPropagation();
+          console.log(`Debug button for Door ${index + 1} clicked!`);
+
+          // Force door interaction regardless of distance
+          console.log("Forcing door interaction");
+
+          // Add swing animation to the door
+          door.style.transition = 'transform 1s ease-in-out';
+          door.style.transformOrigin = 'left';
+          door.style.transform = 'rotateY(-80deg)';
+
+          // Show a message
+          helpText.textContent = `You've opened Door ${index + 1}! Explore what's inside...`;
+
+          // After animation completes, show the door view
+          setTimeout(() => {
+            // Reset door transform
+            door.style.transform = '';
+
+            // Show door view or MCQ
+            if (doorUnlocked[index]) {
+              showDoorView(index);
+            } else {
+              showMCQ(index);
+            }
+          }, 1000);
+        });
+
+        door.appendChild(debugButton);
+      });
+    }
+
+    // Call the function to add dynamic elements
+    addDynamicElements();
+
+    // Call debug function after a short delay
+    setTimeout(debugDoorInteractions, 2000);
   </script>
 </body>
 </html>
