@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Recognition Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Emotion Recognition Game</h1>
+        <p id="score">Score: 0</p>
+        <p id="instruction">Guess the emotion based on the image:</p>
+        <img id="emotion-image" src="" alt="Emotion Image" style="max-width: 300px; height: auto;">
+        
+        <div class="buttons">
+            <button class="emotion-btn" onclick="submitAnswer('Happy')">Happy</button>
+            <button class="emotion-btn" onclick="submitAnswer('Sad')">Sad</button>
+            <button class="emotion-btn" onclick="submitAnswer('Angry')">Angry</button>
+            <button class="emotion-btn" onclick="submitAnswer('Surprised')">Surprised</button>
+            <button class="emotion-btn" onclick="submitAnswer('Fearful')">Fearful</button>
+            <button class="emotion-btn" onclick="submitAnswer('Disgusted')">Disgusted</button>
+        </div>
+
+        <p id="result"></p>
+        <button id="new-emotion" onclick="newEmotion()">Get New Emotion</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
