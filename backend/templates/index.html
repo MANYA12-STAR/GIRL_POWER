@@ -3,110 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emotion Recognition</title>
-    <style>
-        .image-container {
-            margin: 20px 0;
-        }
-        .emotion-btn {
-            margin: 5px;
-            padding: 10px;
-        }
-    </style>
+    <title>Emotion Recognition Game</title>
+    <!-- Correct link to CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Upload an Image to Modify Emotions</h1>
+    <div class="game-container">
+        <h1>Emotion Recognition Game</h1>
+        <p id="score">Score: 0</p>
+        <p id="instruction">Guess the emotion based on the image:</p>
+        <img id="emotion-image" src="" alt="Emotion Image" style="max-width: 300px; height: auto;">
+        
+        <div class="buttons">
+            <button class="emotion-btn" onclick="submitAnswer('Happy')">Happy</button>
+            <button class="emotion-btn" onclick="submitAnswer('Sad')">Sad</button>
+            <button class="emotion-btn" onclick="submitAnswer('Angry')">Angry</button>
+            <button class="emotion-btn" onclick="submitAnswer('Surprised')">Surprised</button>
+            <button class="emotion-btn" onclick="submitAnswer('Fearful')">Fearful</button>
+            <button class="emotion-btn" onclick="submitAnswer('Disgusted')">Disgusted</button>
+        </div>
 
-    <!-- Image Upload Form -->
-    <form id="upload-form" enctype="multipart/form-data">
-        <input type="file" id="file-input" name="file" accept="image/*" required>
-        <button type="submit">Upload</button>
-    </form>
-
-    <div class="image-container">
-        <h2>Uploaded Image</h2>
-        <img id="original-image" src="" alt="Original Image" style="width:300px; display:none;">
+        <p id="result"></p>
+        <button id="new-emotion" onclick="newEmotion()">Get New Emotion</button>
     </div>
 
-    <div class="image-container">
-        <h2>Modified Image</h2>
-        <img id="modified-image" src="" alt="Modified Image" style="width:300px; display:none;">
-    </div>
-
-    <h2>Select the Emotion:</h2>
-    <div id="emotion-options" style="display:none;">
-        <button class="emotion-btn" data-emotion="happy">Happy</button>
-        <button class="emotion-btn" data-emotion="sad">Sad</button>
-        <button class="emotion-btn" data-emotion="surprised">Surprised</button>
-        <button class="emotion-btn" data-emotion="neutral">Neutral</button>
-    </div>
-
-    <h3 id="score">Score: 0</h3>
-
-    <script>
-        let score = 0;
-        let correctEmotion = '';
-
-        document.getElementById('upload-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            try {
-                const formData = new FormData();
-                const fileInput = document.getElementById('file-input');
-                
-                if (!fileInput.files.length) {
-                    alert('Please select a file first');
-                    return;
-                }
-
-                formData.append("file", fileInput.files[0]);
-
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Upload failed');
-                }
-
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                // Display the images
-                document.getElementById('original-image').src = `data:image/jpeg;base64,${data.original_image}`;
-                document.getElementById('modified-image').src = `data:image/jpeg;base64,${data.modified_image}`;
-                document.getElementById('original-image').style.display = 'block';
-                document.getElementById('modified-image').style.display = 'block';
-
-                // Store the correct emotion and show options
-                correctEmotion = data.emotion;
-                document.getElementById('emotion-options').style.display = 'block';
-
-            } catch (error) {
-                alert('Error: ' + error.message);
-                console.error('Error:', error);
-            }
-        });
-
-        document.querySelectorAll('.emotion-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const selectedEmotion = this.getAttribute('data-emotion');
-
-                if (selectedEmotion === correctEmotion) {
-                    score++;
-                    document.getElementById('score').textContent = 'Score: ' + score;
-                    alert('Correct! Score: ' + score);
-                } else {
-                    alert('Wrong! Try again.');
-                }
-
-                document.getElementById('emotion-options').style.display = 'none';
-            });
-        });
-    </script>
+    <!-- Correct script link -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
