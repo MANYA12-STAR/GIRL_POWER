@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 *.pkl filter=lfs diff=lfs merge=lfs -text
 *.dat filter=lfs diff=lfs merge=lfs -text
 .dat filter=lfs diff=lfs merge=lfs -text
+=======
+shape_predictor_68_face_landmarks.dat filter=lfs diff=lfs merge=lfs -text
+>>>>>>> 8a6ad5a34fea37a7b1dc0628c6ac8f733e786aea
